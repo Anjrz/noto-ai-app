@@ -1,0 +1,7 @@
+kivy
+openai
+pytesseract
+Pillow
+PyPDF2
+kivmob
+sqlite3

@@ -8,6 +8,12 @@ Your intelligent, AI-powered PDF research companion — powered locally by **LLa
 
 **Noto.ai** transforms static PDFs into **interactive, AI-narrated research companions**. Ask questions, summarize content, and interact naturally — all while keeping your AI engine **local and private** using Meta’s LLaMA 3 via [Ollama](https://ollama.com/).
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Language-Python-blue?style=flat-square" />
+  <img src="https://img.shields.io/badge/Framework-Kivy-red?style=flat-square&logo=streamlit" />
+  <img src="https://img.shields.io/badge/Model-LLaMA%203-blueviolet?style=flat-square" />
+</p>
+
 ---
 
 ## 🚀 Features

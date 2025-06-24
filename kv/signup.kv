@@ -1,5 +1,5 @@
-<LoginScreen>:
-    name: 'login'
+<SignUpScreen>:
+    name: 'signup'
     show_password: False
     canvas.before:
         Color:
@@ -35,7 +35,7 @@
                     radius: [24]
 
             Label:
-                text: "Login"
+                text: "Sign Up"
                 font_size: 32
                 bold: True
                 color: app.accent_color
@@ -47,7 +47,7 @@
                 spacing: 16
 
                 TextInput:
-                    id: username
+                    id: new_username
                     hint_text: "Username"
                     font_size: 20
                     size_hint_y: None
@@ -58,8 +58,8 @@
                     background_color: 1,1,1,1
                     foreground_color: app.text_color
                     multiline: False
-                    focus_next: password
-                    on_text_validate: password.focus = True
+                    focus_next: new_password
+                    on_text_validate: new_password.focus = True
                     cursor_color: app.accent_color
                     canvas.after:
                         Color:
@@ -74,7 +74,7 @@
                     height: 48
 
                     TextInput:
-                        id: password
+                        id: new_password
                         hint_text: "Password"
                         font_size: 20
                         size_hint_x: 1
@@ -86,7 +86,7 @@
                         foreground_color: app.text_color
                         multiline: False
                         focus_next: None
-                        on_text_validate: app.login_user(username.text, password.text)
+                        on_text_validate: app.signup_user(new_username.text, new_password.text)
                         cursor_color: app.accent_color
                         canvas.after:
                             Color:
@@ -113,7 +113,7 @@
                                 source: 'assets/icons/eye.png' if not root.show_password else 'assets/icons/eye-off.png'
 
             Label:
-                id: login_error
+                id: signup_error
                 text: ""
                 color: 1, 0, 0, 1
                 font_size: 16
@@ -121,17 +121,17 @@
                 height: 20
 
             Animated3DButton:
-                text: "Login"
+                text: "Sign Up"
                 size_hint_y: None
                 height: 46
                 font_size: 20
-                on_press: app.login_user(username.text, password.text)
+                on_press: app.signup_user(new_username.text, new_password.text)
 
             Button:
-                text: "Sign Up"
+                text: "Back to Login"
                 size_hint_y: None
                 height: 46
                 font_size: 20
                 background_color: 0,0,0,0
                 color: app.accent_color
-                on_press: app.root.current = 'signup'
+                on_press: app.root.current = 'login'

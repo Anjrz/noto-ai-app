@@ -10,18 +10,20 @@ from kivy.properties import NumericProperty, StringProperty, ListProperty, Boole
 from kivy.clock import mainthread, Clock
 from kivy.core.window import Window
 
+from csv_database import CSVDatabase
+from ocr_service import OCRService
+from ai_service import AISummarizer
+
 Window.title = "Noto.ai"
 
 import threading
 import tkinter as tk
 from tkinter import filedialog
 
-from ocr_service import OCRService
-from ai_service import AISummarizer
-
 class SplashScreen(Screen): pass
 class MainAppScreen(Screen): pass
 class LoginScreen(Screen): pass
+class SignUpScreen(Screen): pass
 
 class Animated3DButton(Button):
     scale = NumericProperty(1.0)
@@ -150,8 +152,6 @@ class MainContent(BoxLayout):
                 accent_color=[0.10, 0.45, 0.80, 1],
                 d=0.5
             ).start(app)
-
-    # ... all other MainContent methods unchanged ...
 
     def on_upload_button_press(self, button):
         self.animate_button(button)
@@ -386,21 +386,46 @@ class NotoAIApp(App):
     text_color = ListProperty([0.08, 0.10, 0.20, 1])
     accent_color = ListProperty([0.10, 0.45, 0.80, 1])
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.db = CSVDatabase()
+
     def build(self):
         Builder.load_file('kv/splash.kv')
         Builder.load_file('kv/login.kv')
+        Builder.load_file('kv/signup.kv')
         Builder.load_file('kv/main.kv')
         sm = Manager(transition=FadeTransition())
         sm.add_widget(SplashScreen(name='splash'))
-        sm.add_widget(MainAppScreen(name='main'))
         sm.add_widget(LoginScreen(name='login'))
+        sm.add_widget(SignUpScreen(name='signup'))
+        sm.add_widget(MainAppScreen(name='main'))
         return sm
 
     def on_start(self):
-        Clock.schedule_once(self.switch_to_main, 10)
+        Clock.schedule_once(self.switch_to_login, 3)
 
-    def switch_to_main(self, dt):
-        self.root.current = 'main'
+    def switch_to_login(self, dt):
+        self.root.current = 'login'
+
+    def login_user(self, username, password):
+        login_screen = self.root.get_screen('login')
+        if self.db.authenticate_user(username, password):
+            login_screen.ids.login_error.text = ""
+            self.root.current = 'main'
+        else:
+            login_screen.ids.login_error.text = "Invalid username or password"
+
+    def signup_user(self, username, password):
+        signup_screen = self.root.get_screen('signup')
+        if not username or not password:
+            signup_screen.ids.signup_error.text = "Please fill all fields"
+            return
+        if self.db.register_user(username, password):
+            signup_screen.ids.signup_error.text = ""
+            self.root.current = 'main'
+        else:
+            signup_screen.ids.signup_error.text = "Username already exists"
 
 if __name__ == "__main__":
     NotoAIApp().run()

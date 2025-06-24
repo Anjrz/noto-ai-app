@@ -1,4 +1,3 @@
-# database.py
 import sqlite3
 
 class Database:
@@ -18,9 +17,24 @@ class Database:
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY,
-                username TEXT,
+                username TEXT UNIQUE,
+                password TEXT,
                 premium INTEGER DEFAULT 0,
                 notes_this_month INTEGER DEFAULT 0
             )
         ''')
         self.conn.commit()
+
+    def register_user(self, username, password):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, password))
+            self.conn.commit()
+            return True
+        except sqlite3.IntegrityError:
+            return False  # Username already exists
+
+    def authenticate_user(self, username, password):
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT * FROM users WHERE username=? AND password=?', (username, password))
+        return cursor.fetchone() is not None

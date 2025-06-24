@@ -58,20 +58,17 @@
         anim_delay: 0.05
 
 <MainContent>:
-    bg_color: root.bg_color
-    text_color: root.text_color
-    accent_color: root.accent_color
     orientation: 'vertical'
     spacing: 0
     padding: 0
     canvas.before:
         Color:
-            rgba: root.bg_color
+            rgba: app.bg_color
         Rectangle:
             pos: self.pos
             size: self.size
         Color:
-            rgba: root.accent_color
+            rgba: app.accent_color
         Rectangle:
             pos: self.x, self.y + self.height/2
             size: self.width, self.height/2
@@ -85,7 +82,7 @@
         spacing: 32
         canvas.before:
             Color:
-                rgba: root.bg_color
+                rgba: app.bg_color
             RoundedRectangle:
                 pos: self.pos
                 size: self.size
@@ -116,14 +113,14 @@
                     text: "Noto.ai"
                     font_size: 44
                     bold: True
-                    color: root.text_color
+                    color: app.text_color
                     size_hint_y: None
                     height: 54
                 
                 Label:
                     text: "Your Study Toolkit"
                     font_size: 28
-                    color: root.text_color
+                    color: app.text_color
                     bold: False
                     size_hint_y: None
                     height: 40
@@ -132,6 +129,7 @@
                 id: login_btn
                 text: "Login"
                 size_hint_x: 0.35
+                size_hint_y: None
                 font_size: 24
                 on_press: app.root.current = 'login'
 
@@ -168,7 +166,7 @@
                     Color:
                         rgba: 1, 1, 1, 1
                     Rectangle:
-                        source: 'assets/icons/sun.png' if root.bg_color == [0.96, 0.98, 1, 1] else 'assets/icons/moon.png'
+                        source: 'assets/icons/sun.png' if app.bg_color == [0.96, 0.98, 1, 1] else 'assets/icons/moon.png'
                         pos: self.x + (self.width-40)/2, self.y + (self.height-40)/2
                         size: 40, 40
 
@@ -239,9 +237,9 @@
                 height: self.minimum_height
                 font_size: 24
                 padding: 24, 24, 24, 24
-                background_color: root.bg_color
-                foreground_color: root.text_color
-                cursor_color: root.accent_color
+                background_color: app.bg_color
+                foreground_color: app.text_color
+                cursor_color: app.accent_color
                 text_size: self.width, None
                 halign: 'left'
                 valign: 'top'
@@ -270,9 +268,9 @@
                     font_size: 20
                     size_hint_x: 0.7
                     multiline: False
-                    background_color: root.bg_color
-                    foreground_color: root.text_color
-                    cursor_color: root.accent_color
+                    background_color: app.bg_color
+                    foreground_color: app.text_color
+                    cursor_color: app.accent_color
                     padding: 18, 12, 18, 12
 
                 Animated3DButton:
@@ -291,7 +289,7 @@
                 Label:
                     id: chat_answer
                     text: ""
-                    color: root.text_color
+                    color: app.text_color
                     font_size: 20
                     size_hint_x: 1
                     size_hint_y: None

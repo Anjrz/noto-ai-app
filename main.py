@@ -19,16 +19,10 @@ from tkinter import filedialog
 from ocr_service import OCRService
 from ai_service import AISummarizer
 
-# --- Splash Screen ---
 class SplashScreen(Screen): pass
-
-# --- Main App Screen ---
 class MainAppScreen(Screen): pass
-
-# --- Login Screen ---
 class LoginScreen(Screen): pass
 
-# --- Animated Button Classes ---
 class Animated3DButton(Button):
     scale = NumericProperty(1.0)
     shadow_offset = NumericProperty(12)
@@ -128,12 +122,7 @@ class Animated3DDropdownButton(Animated3DButton):
         anim_down.bind(on_complete=restore)
         anim_down.start(self)
 
-# --- Main Content Logic ---
 class MainContent(BoxLayout):
-    bg_color = ListProperty([0.96, 0.98, 1, 1])
-    text_color = ListProperty([0.08, 0.10, 0.20, 1])
-    accent_color = ListProperty([0.10, 0.45, 0.80, 1])
-
     file_path = StringProperty("")
     action_selected = BooleanProperty(False)
     summary_length = OptionProperty("Medium", options=["Short", "Medium", "Long"])
@@ -145,19 +134,24 @@ class MainContent(BoxLayout):
         self.ai_summarizer = AISummarizer()
 
     def toggle_dark_mode(self):
+        app = App.get_running_app()
         from kivy.animation import Animation
-        if self.bg_color == [0.96, 0.98, 1, 1]:
+        if app.bg_color == [0.96, 0.98, 1, 1]:
             Animation(
                 bg_color=[0.13, 0.15, 0.18, 1],
                 text_color=[1, 1, 1, 1],
+                accent_color=[0.10, 0.45, 0.80, 1],
                 d=0.5
-            ).start(self)
+            ).start(app)
         else:
             Animation(
                 bg_color=[0.96, 0.98, 1, 1],
                 text_color=[0.08, 0.10, 0.20, 1],
+                accent_color=[0.10, 0.45, 0.80, 1],
                 d=0.5
-            ).start(self)
+            ).start(app)
+
+    # ... all other MainContent methods unchanged ...
 
     def on_upload_button_press(self, button):
         self.animate_button(button)
@@ -354,7 +348,6 @@ class MainContent(BoxLayout):
     def update_label(self, text):
         self.ids.notes_label.text = text
 
-    # --- Chatbot Feature ---
     def on_ask_question(self):
         question = self.ids.chat_input.text.strip()
         notes = self.ids.notes_label.text.strip()
@@ -389,6 +382,10 @@ class Manager(ScreenManager):
     pass
 
 class NotoAIApp(App):
+    bg_color = ListProperty([0.96, 0.98, 1, 1])
+    text_color = ListProperty([0.08, 0.10, 0.20, 1])
+    accent_color = ListProperty([0.10, 0.45, 0.80, 1])
+
     def build(self):
         Builder.load_file('kv/splash.kv')
         Builder.load_file('kv/login.kv')
@@ -400,7 +397,7 @@ class NotoAIApp(App):
         return sm
 
     def on_start(self):
-        Clock.schedule_once(self.switch_to_main, 3)  # Set your splash duration here
+        Clock.schedule_once(self.switch_to_main, 10)
 
     def switch_to_main(self, dt):
         self.root.current = 'main'

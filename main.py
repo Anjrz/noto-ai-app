@@ -1,5 +1,6 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.lang import Builder
 from kivy.core.clipboard import Clipboard
 from kivy.animation import Animation
@@ -9,22 +10,30 @@ from kivy.properties import NumericProperty, StringProperty, ListProperty, Boole
 from kivy.clock import mainthread, Clock
 from kivy.core.window import Window
 
-# Set the window title to Noto.ai
 Window.title = "Noto.ai"
 
 import threading
 import tkinter as tk
 from tkinter import filedialog
-import docx
 
 from ocr_service import OCRService
 from ai_service import AISummarizer
 
+# --- Splash Screen ---
+class SplashScreen(Screen): pass
+
+# --- Main App Screen ---
+class MainAppScreen(Screen): pass
+
+# --- Login Screen ---
+class LoginScreen(Screen): pass
+
+# --- Animated Button Classes ---
 class Animated3DButton(Button):
     scale = NumericProperty(1.0)
-    shadow_offset = NumericProperty(8)
-    shadow_blur = NumericProperty(24)
-    shadow_alpha = NumericProperty(0.23)
+    shadow_offset = NumericProperty(12)
+    shadow_blur = NumericProperty(36)
+    shadow_alpha = NumericProperty(0.28)
     hovered = BooleanProperty(False)
 
     def __init__(self, **kwargs):
@@ -35,10 +44,20 @@ class Animated3DButton(Button):
         inside = self.collide_point(*self.to_widget(*pos))
         if inside and not self.hovered:
             self.hovered = True
-            App.get_running_app().root.animate_button_hover(self)
+            app = App.get_running_app()
+            if hasattr(app.root, 'get_screen'):
+                try:
+                    app.root.get_screen('main').ids.main_content.animate_button_hover(self)
+                except Exception:
+                    pass
         elif not inside and self.hovered:
             self.hovered = False
-            App.get_running_app().root.animate_button_release(self)
+            app = App.get_running_app()
+            if hasattr(app.root, 'get_screen'):
+                try:
+                    app.root.get_screen('main').ids.main_content.animate_button_release(self)
+                except Exception:
+                    pass
 
     def on_scale(self, instance, value):
         self.transform = (self.center_x, self.center_y, value)
@@ -64,7 +83,7 @@ class Animated3DDropdownButton(Animated3DButton):
             btn = Animated3DButton(
                 text=option,
                 size_hint_y=None,
-                height=44,
+                height=48,
                 font_size=22
             )
             btn.is_dropdown_option = True
@@ -84,10 +103,10 @@ class Animated3DDropdownButton(Animated3DButton):
         self.dropdown.height = 0
         self.dropdown.opacity = 0
         x, y = self.to_window(self.x, self.y)
-        y = y - (44 * len(self.options))
+        y = y - (48 * len(self.options))
         self.dropdown.pos = (x, y)
         self.dropdown.open(self)
-        Animation(height=44*len(self.options), opacity=1, d=0.7, t='out_cubic').start(self.dropdown)
+        Animation(height=48*len(self.options), opacity=1, d=0.7, t='out_cubic').start(self.dropdown)
 
     def animate_dropdown_close(self):
         anim = Animation(height=0, opacity=0, d=0.18, t='in_cubic')
@@ -104,29 +123,16 @@ class Animated3DDropdownButton(Animated3DButton):
 
     def animate_button(self):
         anim_down = Animation(scale=0.93, shadow_offset=2, shadow_blur=8, shadow_alpha=0.13, duration=0.08, t='out_quad')
-        anim_up = Animation(scale=1.0, shadow_offset=12, shadow_blur=32, shadow_alpha=0.26, duration=0.14, t='out_bounce')
+        anim_up = Animation(scale=1.0, shadow_offset=12, shadow_blur=36, shadow_alpha=0.28, duration=0.14, t='out_bounce')
         def restore(*args): anim_up.start(self)
         anim_down.bind(on_complete=restore)
         anim_down.start(self)
 
-class OCRService:
-    def pdf_to_text(self, file_path):
-        return "Extracted text from PDF"
-
-    def image_to_text(self, file_path):
-        return "Extracted text from image"
-
-    def word_to_text(self, file_path):
-        doc = docx.Document(file_path)
-        full_text = []
-        for para in doc.paragraphs:
-            full_text.append(para.text)
-        return '\n'.join(full_text)
-
-class MainScreen(BoxLayout):
-    bg_color = ListProperty([0.92, 0.96, 1, 1])
-    text_color = ListProperty([0, 0, 0, 1])
-    accent_color = ListProperty([0.2, 0.6, 0.86, 1])
+# --- Main Content Logic ---
+class MainContent(BoxLayout):
+    bg_color = ListProperty([0.96, 0.98, 1, 1])
+    text_color = ListProperty([0.08, 0.10, 0.20, 1])
+    accent_color = ListProperty([0.10, 0.45, 0.80, 1])
 
     file_path = StringProperty("")
     action_selected = BooleanProperty(False)
@@ -140,7 +146,7 @@ class MainScreen(BoxLayout):
 
     def toggle_dark_mode(self):
         from kivy.animation import Animation
-        if self.bg_color == [0.92, 0.96, 1, 1]:
+        if self.bg_color == [0.96, 0.98, 1, 1]:
             Animation(
                 bg_color=[0.13, 0.15, 0.18, 1],
                 text_color=[1, 1, 1, 1],
@@ -148,8 +154,8 @@ class MainScreen(BoxLayout):
             ).start(self)
         else:
             Animation(
-                bg_color=[0.92, 0.96, 1, 1],
-                text_color=[0, 0, 0, 1],
+                bg_color=[0.96, 0.98, 1, 1],
+                text_color=[0.08, 0.10, 0.20, 1],
                 d=0.5
             ).start(self)
 
@@ -217,10 +223,15 @@ class MainScreen(BoxLayout):
     def _process_file_bg(self, file_path):
         selected_mode = self.ids.mode_dropdown.selected_option
         text = self._extract_text(file_path)
+        if not text or not text.strip():
+            self.show_result("Could not extract any text from this file. The PDF may be image-based, encrypted, or too complex for current extraction methods.")
+            self.show_loading(False)
+            self.enable_buttons()
+            return
         if selected_mode == "OCR Text Extraction":
             self.show_result(text)
         elif selected_mode == "AI Notes Generation":
-            if text.strip():
+            if text and text.strip():
                 prompt = self.get_summary_prompt(self.summary_length, text)
                 try:
                     summary = self.ai_summarizer.summarize(prompt)
@@ -230,7 +241,7 @@ class MainScreen(BoxLayout):
             else:
                 self.show_result("Could not extract text from file.")
         elif selected_mode == "AI Question Generation":
-            if text.strip():
+            if text and text.strip():
                 prompt = f"Generate 5 quiz questions for a student based on these notes:\n{text}\nQuestions:"
                 try:
                     questions = self.ai_summarizer.summarize(prompt)
@@ -240,7 +251,7 @@ class MainScreen(BoxLayout):
             else:
                 self.show_result("Could not extract text from file.")
         elif selected_mode == "AI Flashcard Generation":
-            if text.strip():
+            if text and text.strip():
                 prompt = (
                     "From the following notes, generate 5 flashcards in the format:\n"
                     "Q: <question>\nA: <answer>\n\nNotes:\n"
@@ -254,7 +265,7 @@ class MainScreen(BoxLayout):
             else:
                 self.show_result("Could not extract text from file.")
         elif selected_mode == "AI Keyword Extraction":
-            if text.strip():
+            if text and text.strip():
                 prompt = (
                     "Extract the most relevant keywords and key phrases from the following text. "
                     "List both single and multi-word keywords, ordered by importance. "
@@ -293,6 +304,8 @@ class MainScreen(BoxLayout):
     @mainthread
     def show_result(self, text):
         self.ids.notes_label.opacity = 0
+        if text is None:
+            text = ""
         self.ids.notes_label.text = text
         Animation(opacity=1, d=0.6, t='out_quad').start(self.ids.notes_label)
         self.ids.copy_btn.opacity = 1
@@ -322,18 +335,18 @@ class MainScreen(BoxLayout):
     def animate_button_release(self, button):
         Animation(
             scale=1.0,
-            shadow_offset=8,
-            shadow_blur=24,
-            shadow_alpha=0.23,
+            shadow_offset=12,
+            shadow_blur=36,
+            shadow_alpha=0.28,
             duration=0.14, t='out_bounce'
         ).start(button)
 
     def animate_button_hover(self, button):
         Animation(
-            scale=1.04,
-            shadow_offset=14,
-            shadow_blur=34,
-            shadow_alpha=0.32,
+            scale=1.08,
+            shadow_offset=16,
+            shadow_blur=40,
+            shadow_alpha=0.33,
             duration=0.18, t='out_quad'
         ).start(button)
 
@@ -372,11 +385,25 @@ class MainScreen(BoxLayout):
         self.ids.chat_answer.text = answer
         self.ids.ask_btn.disabled = False
 
+class Manager(ScreenManager):
+    pass
+
 class NotoAIApp(App):
     def build(self):
-        self.icon = 'assets/icons/app_icon_72.png'
-        return MainScreen()
+        Builder.load_file('kv/splash.kv')
+        Builder.load_file('kv/login.kv')
+        Builder.load_file('kv/main.kv')
+        sm = Manager(transition=FadeTransition())
+        sm.add_widget(SplashScreen(name='splash'))
+        sm.add_widget(MainAppScreen(name='main'))
+        sm.add_widget(LoginScreen(name='login'))
+        return sm
+
+    def on_start(self):
+        Clock.schedule_once(self.switch_to_main, 3)  # Set your splash duration here
+
+    def switch_to_main(self, dt):
+        self.root.current = 'main'
 
 if __name__ == "__main__":
-    Builder.load_file('kv/main.kv')
     NotoAIApp().run()

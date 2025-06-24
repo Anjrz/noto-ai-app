@@ -1,0 +1,82 @@
+<LoginScreen>:
+    name: 'login'
+    canvas.before:
+        Color:
+            rgba: (0.96, 0.98, 1, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 0, 80, 0, 80
+        spacing: 0
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: None
+            width: 420
+            size_hint_y: None
+            height: 480
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            spacing: 32
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.98
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [40]
+
+            Label:
+                text: "Login to Noto.ai"
+                font_size: 32
+                bold: True
+                color: 0.10, 0.45, 0.80, 1
+                size_hint_y: None
+                height: 60
+
+            TextInput:
+                id: username
+                hint_text: "Username or Email"
+                font_size: 22
+                size_hint_y: None
+                height: 58
+                padding: 18, 18, 18, 18
+                background_normal: ''
+                background_active: ''
+                background_color: 0.94, 0.96, 1, 1
+                foreground_color: 0.08, 0.10, 0.20, 1
+                multiline: False
+                cursor_color: 0.10, 0.45, 0.80, 1
+                radius: [24]
+
+            TextInput:
+                id: password
+                hint_text: "Password"
+                font_size: 22
+                size_hint_y: None
+                height: 58
+                padding: 18, 18, 18, 18
+                password: True
+                background_normal: ''
+                background_active: ''
+                background_color: 0.94, 0.96, 1, 1
+                foreground_color: 0.08, 0.10, 0.20, 1
+                multiline: False
+                cursor_color: 0.10, 0.45, 0.80, 1
+                radius: [24]
+
+            Animated3DButton:
+                text: "Login"
+                size_hint_y: None 
+                height : 54
+                font_size: 24
+                on_press:app.root.current = 'main'
+
+            Animated3DButton:
+                text: "Back"
+                size_hint_y: None
+                height: 54
+                font_size: 24
+                on_press:app.root.current = 'main'

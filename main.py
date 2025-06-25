@@ -317,6 +317,10 @@ class MainContent(BoxLayout):
     def copy_notes_to_clipboard(self):
         Clipboard.copy(self.ids.notes_label.text)
 
+    # --- ADD THIS METHOD FOR ADVANCED TEXT BOX COPY BUTTON ---
+    def copy_to_clipboard(self, text):
+        Clipboard.copy(text)
+
     def animate_button(self, button):
         Animation(
             scale=0.93,
@@ -403,7 +407,7 @@ class NotoAIApp(App):
         return sm
 
     def on_start(self):
-        Clock.schedule_once(self.switch_to_login, 3)
+        Clock.schedule_once(self.switch_to_login, 4)
 
     def switch_to_login(self, dt):
         self.root.current = 'login'

@@ -229,7 +229,7 @@ class MainContent(BoxLayout):
                 prompt = self.get_summary_prompt(self.summary_length, text)
                 try:
                     summary = self.ai_summarizer.summarize(prompt)
-                    self.show_result(summary)
+                    self.show_result_live(summary)  # <-- Use live typing effect
                 except Exception as e:
                     self.show_result(f"AI Error: {e}")
             else:
@@ -239,7 +239,7 @@ class MainContent(BoxLayout):
                 prompt = f"Generate 5 quiz questions for a student based on these notes:\n{text}\nQuestions:"
                 try:
                     questions = self.ai_summarizer.summarize(prompt)
-                    self.show_result(questions)
+                    self.show_result_live(questions)  # <-- Use live typing effect
                 except Exception as e:
                     self.show_result(f"AI Error: {e}")
             else:
@@ -253,7 +253,7 @@ class MainContent(BoxLayout):
                 )
                 try:
                     flashcards = self.ai_summarizer.summarize(prompt)
-                    self.show_result(flashcards)
+                    self.show_result_live(flashcards)  # <-- Use live typing effect
                 except Exception as e:
                     self.show_result(f"AI Error: {e}")
             else:
@@ -268,7 +268,7 @@ class MainContent(BoxLayout):
                 )
                 try:
                     keywords = self.ai_summarizer.summarize(prompt)
-                    self.show_result("Extracted Keywords:\n" + keywords)
+                    self.show_result_live("Extracted Keywords:\n" + keywords)  # <-- Use live typing effect
                 except Exception as e:
                     self.show_result(f"AI Error: {e}")
             else:
@@ -305,6 +305,31 @@ class MainContent(BoxLayout):
         self.ids.copy_btn.opacity = 1
         self.ids.copy_btn.disabled = False
 
+    # --- LIVE TYPEWRITER EFFECT FOR NOTES ---
+    @mainthread
+    def show_result_live(self, text, speed=0.01):
+        self.ids.notes_label.opacity = 1
+        self._full_text = text or ""
+        self._current_index = 0
+        self.ids.notes_label.text = ""
+        self.ids.copy_btn.opacity = 0
+        self.ids.copy_btn.disabled = True
+        if hasattr(self, '_typing_event') and self._typing_event:
+            self._typing_event.cancel()
+        self._typing_event = Clock.schedule_interval(lambda dt: self._typewriter_step(), speed)
+
+    def _typewriter_step(self):
+        if self._current_index < len(self._full_text):
+            self.ids.notes_label.text += self._full_text[self._current_index]
+            self._current_index += 1
+        else:
+            if hasattr(self, '_typing_event') and self._typing_event:
+                self._typing_event.cancel()
+            # Enable copy button after typing is done
+            self.ids.copy_btn.opacity = 1
+            self.ids.copy_btn.disabled = False
+            return False  # Stop the Clock
+
     @mainthread
     def show_loading(self, show):
         self.ids.loading_spinner.opacity = 1 if show else 0
@@ -317,7 +342,6 @@ class MainContent(BoxLayout):
     def copy_notes_to_clipboard(self):
         Clipboard.copy(self.ids.notes_label.text)
 
-    # --- ADD THIS METHOD FOR ADVANCED TEXT BOX COPY BUTTON ---
     def copy_to_clipboard(self, text):
         Clipboard.copy(text)
 

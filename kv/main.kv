@@ -61,7 +61,6 @@
     name: 'main'
     FloatLayout:
 
-        # 🌧 Live video background
         Video:
             source: 'assets/backgrounds/rain.mp4'
             state: 'play'
@@ -72,13 +71,12 @@
             pos: self.pos
             volume: 0
 
-        # --- Centered Main App UI Card ---
         BoxLayout:
             orientation: 'vertical'
             size_hint: None, None
             width: 900
             height: self.minimum_height
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            pos_hint: {'center_x': 0.5, 'center_y': 0.47}  # Shifted Up
             padding: 40
             spacing: 18
             canvas.before:
@@ -95,7 +93,6 @@
                     size: self.width, self.height
                     radius: [40]
 
-            # --- Heading, App Icon, and Login ---
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint_y: None
@@ -117,7 +114,7 @@
                         color: app.text_color
                         size_hint_y: None
                         height: 54
-                    
+
                     Label:
                         text: "Your Study Toolkit"
                         font_size: 28
@@ -206,7 +203,6 @@
                 font_size: 20
                 on_press: root.animate_button(self); root.copy_notes_to_clipboard()
 
-            # --- SPINNER ABOVE THE TEXT BOX ---
             AnchorLayout:
                 size_hint_y: None
                 height: 54
@@ -216,11 +212,10 @@
                     size_hint: None, None
                     size: 54, 54
 
-            # --- CLEAN, LARGE, SCROLLABLE TEXT BOX FOR GENERATED TEXT (NO BUTTONS) ---
             BoxLayout:
                 orientation: 'vertical'
                 size_hint_y: None
-                height: 340
+                height: 280
                 padding: 0
                 spacing: 0
 
@@ -238,7 +233,6 @@
                         size: self.width, self.height
                         radius: [16]
 
-                # The main text area (scrollable)
                 ScrollView:
                     bar_width: 10
                     do_scroll_x: False
@@ -266,7 +260,6 @@
                         on_focus:
                             if self.focus: self.select_all()
 
-                # Counter row (bottom right)
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: None
@@ -316,21 +309,49 @@
                         font_size: 18
                         on_press: root.on_ask_question()
 
-                ScrollView:
+                BoxLayout:
+                    orientation: 'vertical'
                     size_hint_y: 1
-                    bar_width: 10
-                    do_scroll_x: False
-                    do_scroll_y: True
+                    padding: 0
+                    spacing: 0
 
-                    Label:
-                        id: chat_answer
-                        text: ""
-                        color: app.text_color
-                        font_size: 18
-                        size_hint_x: 1
-                        size_hint_y: None
-                        height: self.texture_size[1] + 24 if self.text else 0
-                        text_size: self.width, None
-                        halign: 'left'
-                        valign: 'top'
-                        padding_x: 10
+                    canvas.before:
+                        Color:
+                            rgba: 0.98, 0.98, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [16]
+                        Color:
+                            rgba: 0, 0, 0, 0.06
+                        RoundedRectangle:
+                            pos: self.x, self.y - 4
+                            size: self.width, self.height
+                            radius: [16]
+
+                    ScrollView:
+                        bar_width: 10
+                        do_scroll_x: False
+                        do_scroll_y: True
+                        size_hint: 1, 1
+
+                        TextInput:
+                            id: chat_answer
+                            text: ""
+                            font_size: root.font_size if hasattr(root, 'font_size') else 20
+                            padding: 24, 24, 24, 24
+                            background_normal: ''
+                            background_active: ''
+                            background_color: 0,0,0,0
+                            foreground_color: (0.1, 0.1, 0.1, 1) if app.bg_color == [0.96, 0.98, 1, 1] else (1,1,1,1)
+                            cursor_color: app.accent_color
+                            size_hint_y: None
+                            height: max(self.minimum_height, 120)
+                            multiline: True
+                            readonly: True
+                            cursor_blink: False
+                            text_size: self.width, None
+                            halign: 'left'
+                            valign: 'top'
+                            on_focus:
+                                if self.focus: self.select_all()

@@ -205,6 +205,16 @@
                 font_size: 20
                 on_press: root.animate_button(self); root.copy_notes_to_clipboard()
 
+            # --- SPINNER ABOVE THE TEXT BOX ---
+            AnchorLayout:
+                size_hint_y: None
+                height: 54
+                anchor_x: 'center'
+                LoadingSpinner:
+                    id: loading_spinner
+                    size_hint: None, None
+                    size: 54, 54
+
             # --- CLEAN, LARGE, SCROLLABLE TEXT BOX FOR GENERATED TEXT (NO BUTTONS) ---
             BoxLayout:
                 orientation: 'vertical'
@@ -271,15 +281,6 @@
                         color: 0.4, 0.4, 0.4, 1
                         size_hint_x: None
                         width: 180
-
-            AnchorLayout:
-                size_hint_y: None
-                height: 54
-                anchor_x: 'center'
-                LoadingSpinner:
-                    id: loading_spinner
-                    size_hint: None, None
-                    size: 54, 54
 
             BoxLayout:
                 orientation: 'vertical'

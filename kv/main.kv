@@ -76,12 +76,12 @@
             size_hint: None, None
             width: 900
             height: self.minimum_height
-            pos_hint: {'center_x': 0.5, 'center_y': 0.49}  # Shifted Up
+            pos_hint: {'center_x': 0.5, 'center_y': 0.49}
             padding: 40
             spacing: 18
             canvas.before:
                 Color:
-                    rgba: app.bg_color
+                    rgba: app.bg_color[0], app.bg_color[1], app.bg_color[2], 0.85  # Semi-transparent background
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
@@ -164,25 +164,44 @@
                 id: summary_length_box
                 orientation: 'horizontal'
                 size_hint_y: None
-                height: 44 if root.ask_box_visible else 0
-                spacing: 10
+                height: 54
+                spacing: 14
                 opacity: 1 if root.ask_box_visible else 0
                 disabled: not root.ask_box_visible
 
                 Animated3DButton:
                     text: "Short"
                     on_press: root.set_summary_length("Short")
-                    background_color: (0.18, 0.7, 0.3, 1) if root.summary_length == "Short" else (0.10, 0.45, 0.80, 1)
+                    canvas.before:
+                        Color:
+                            rgba: (0.18, 0.7, 0.3, 1) if root.summary_length == "Short" else (0.10, 0.45, 0.80, 1)
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [34]
 
                 Animated3DButton:
                     text: "Medium"
                     on_press: root.set_summary_length("Medium")
-                    background_color: (0.18, 0.7, 0.3, 1) if root.summary_length == "Medium" else (0.10, 0.45, 0.80, 1)
+                    canvas.before:
+                        Color:
+                            rgba: (0.18, 0.7, 0.3, 1) if root.summary_length == "Medium" else (0.10, 0.45, 0.80, 1)
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [34]
 
                 Animated3DButton:
                     text: "Long"
                     on_press: root.set_summary_length("Long")
-                    background_color: (0.18, 0.7, 0.3, 1) if root.summary_length == "Long" else (0.10, 0.45, 0.80, 1)
+                    canvas.before:
+                        Color:
+                            rgba: (0.18, 0.7, 0.3, 1) if root.summary_length == "Long" else (0.10, 0.45, 0.80, 1)
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [34]
+
 
             Animated3DButton:
                 id: execute_btn
@@ -309,49 +328,30 @@
                         font_size: 18
                         on_press: root.on_ask_question()
 
-                BoxLayout:
-                    orientation: 'vertical'
-                    size_hint_y: 1
-                    padding: 0
-                    spacing: 0
+                ScrollView:
+                    size_hint_y: None
+                    height: 120
+                    bar_width: 10
+                    do_scroll_x: False
+                    do_scroll_y: True
 
-                    canvas.before:
-                        Color:
-                            rgba: 0.98, 0.98, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [16]
-                        Color:
-                            rgba: 0, 0, 0, 0.06
-                        RoundedRectangle:
-                            pos: self.x, self.y - 4
-                            size: self.width, self.height
-                            radius: [16]
-
-                    ScrollView:
-                        bar_width: 10
-                        do_scroll_x: False
-                        do_scroll_y: True
-                        size_hint: 1, 1
-
-                        TextInput:
-                            id: chat_answer
-                            text: ""
-                            font_size: root.font_size if hasattr(root, 'font_size') else 20
-                            padding: 24, 24, 24, 24
-                            background_normal: ''
-                            background_active: ''
-                            background_color: 0,0,0,0
-                            foreground_color: (0.1, 0.1, 0.1, 1) if app.bg_color == [0.96, 0.98, 1, 1] else (1,1,1,1)
-                            cursor_color: app.accent_color
-                            size_hint_y: None
-                            height: max(self.minimum_height, 120)
-                            multiline: True
-                            readonly: True
-                            cursor_blink: False
-                            text_size: self.width, None
-                            halign: 'left'
-                            valign: 'top'
-                            on_focus:
-                                if self.focus: self.select_all()
+                    TextInput:
+                        id: chat_answer
+                        text: ""
+                        font_size: root.font_size if hasattr(root, 'font_size') else 20
+                        padding: 24, 24, 24, 24
+                        background_normal: ''
+                        background_active: ''
+                        background_color: 0,0,0,0
+                        foreground_color: (0.1, 0.1, 0.1, 1) if app.bg_color == [0.96, 0.98, 1, 1] else (1,1,1,1)
+                        cursor_color: app.accent_color
+                        size_hint_y: None
+                        height: max(self.minimum_height, 120)
+                        multiline: True
+                        readonly: True
+                        cursor_blink: False
+                        text_size: self.width, None
+                        halign: 'left'
+                        valign: 'top'
+                        on_focus:
+                            if self.focus: self.select_all()

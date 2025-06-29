@@ -416,6 +416,7 @@ class NotoAIApp(App):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.icon = 'assets/icons/app_icon_72.png'
         self.db = CSVDatabase()
 
     def build(self):

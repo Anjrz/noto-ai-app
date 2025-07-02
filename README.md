@@ -70,6 +70,13 @@ python main.py
 
 ---
 
+### Workflow
+
+![diagram](https://github.com/user-attachments/assets/49dfbec6-ee8c-4c38-a2fa-5ee70d825a50)
+
+
+---
+
 ## ⚙️ .env Configuration (Optional)
 
 If needed, configure `.env`:

